@@ -38,18 +38,18 @@ export default function NewSijilPage() {
     <div className="max-w-lg">
       <div className="mb-8">
         <Link href="/admin/sijilat" className="text-sm text-gunmetal-gray hover:text-midnight-ink mb-2 inline-block">
-          ← العودة للسجلات
+          ← العودة لروابط النماذج
         </Link>
-        <h1 className="text-2xl font-bold text-midnight-ink">إنشاء سجل جديد</h1>
+        <h1 className="text-2xl font-bold text-midnight-ink">إنشاء رابط من قالب جاهز</h1>
         <p className="text-sm text-gunmetal-gray mt-1">
-          بعد الإنشاء ستحصل على رابط تشاركه مع عميلك
+          اختر قالباً جاهزاً وأضف عنواناً للرابط الذي ستشاركه مع المستخدم.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="bg-white rounded-[20px] p-8 space-y-6">
         <div>
           <label className="block text-sm font-medium text-midnight-ink mb-2">
-            اسم السجل <span className="text-highlight-orange">*</span>
+            عنوان الرابط <span className="text-highlight-orange">*</span>
           </label>
           <input
             type="text"
@@ -57,13 +57,13 @@ export default function NewSijilPage() {
             onChange={(e) => setTitle(e.target.value)}
             required
             className="w-full px-4 py-3 border border-soft-concrete rounded-[10px] text-midnight-ink focus:outline-none focus:border-highlight-orange transition-colors"
-            placeholder="مثال: سجل متابعة الطلاب - الفصل الأول"
+            placeholder="مثال: رابط تقرير مبادرة التعلم النشط"
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium text-midnight-ink mb-2">
-            نوع السجل <span className="text-highlight-orange">*</span>
+            القالب الجاهز <span className="text-highlight-orange">*</span>
           </label>
           <select
             value={templateSlug}
@@ -92,7 +92,7 @@ export default function NewSijilPage() {
           disabled={loading || !title.trim()}
           className="w-full bg-midnight-ink text-white py-3 rounded-[160px] font-medium hover:opacity-80 transition-opacity disabled:opacity-50"
         >
-          {loading ? "جارٍ الإنشاء..." : "إنشاء السجل"}
+          {loading ? "جارٍ الإنشاء..." : "إنشاء الرابط"}
         </button>
       </form>
     </div>

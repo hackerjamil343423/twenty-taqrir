@@ -1,13 +1,16 @@
+import path from "path";
 import { Document, Page, Text, View, StyleSheet, Font } from "@react-pdf/renderer";
 import { MinistryHeader } from "./ministry-header";
 import { ReportFooter } from "./report-footer";
 import type { CatalogTemplate } from "@/lib/template-catalog";
 
+const fontsDir = path.join(process.cwd(), "public", "fonts");
+
 Font.register({
   family: "Cairo",
   fonts: [
-    { src: "https://fonts.gstatic.com/s/cairo/v28/SXuwtxSbqnwNk5kC6T8q.woff2", fontWeight: 400 },
-    { src: "https://fonts.gstatic.com/s/cairo/v28/SXuwtxSbqnwNk5kB6T8q.woff2", fontWeight: 700 },
+    { src: path.join(fontsDir, "Cairo-Regular.ttf"), fontWeight: 400 },
+    { src: path.join(fontsDir, "Cairo-Bold.ttf"), fontWeight: 700 },
   ],
 });
 

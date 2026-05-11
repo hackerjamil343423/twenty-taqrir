@@ -15,32 +15,34 @@ export default async function AdminDashboard() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-midnight-ink">الرئيسية</h1>
-          <p className="text-sm text-gunmetal-gray mt-1">مرحباً بك في لوحة تحكم تقارير</p>
+          <p className="text-sm text-gunmetal-gray mt-1">
+            أنشئ روابط مشاركة من القوالب الجاهزة وتابع تحميلات PDF.
+          </p>
         </div>
         <Link
           href="/admin/sijilat/new"
           className="px-6 py-2.5 bg-midnight-ink text-white text-sm font-medium rounded-[160px] hover:opacity-80 transition-opacity"
         >
-          + إنشاء سجل
+          + إنشاء رابط من قالب جاهز
         </Link>
       </div>
 
       <div className="grid grid-cols-3 gap-5 mb-8">
-        <StatCard label="إجمالي السجلات" value={total} icon="📋" />
-        <StatCard label="سجلات مُستخدمة" value={usedCount} icon="✅" />
+        <StatCard label="إجمالي الروابط" value={total} icon="📋" />
+        <StatCard label="روابط مُستخدمة" value={usedCount} icon="✅" />
         <StatCard label="إجمالي التنزيلات" value={totalDownloads} icon="⬇️" />
       </div>
 
       <div className="bg-white rounded-[20px] p-6">
         <p className="text-sm text-gunmetal-gray text-center py-4">
-          أنشئ سجلاً جديداً وشارك رابطه مع عملائك ليملؤوا النموذج ويحملوا الـ PDF مباشرةً.
+          اختر قالباً جاهزاً، أنشئ رابطاً مخصصاً، ثم شاركه ليملأ المستخدم النموذج ويحمل ملف PDF مباشرةً.
         </p>
         <div className="flex justify-center">
           <Link
             href="/admin/sijilat"
             className="text-sm text-highlight-orange hover:underline"
           >
-            عرض جميع السجلات ←
+            عرض جميع الروابط ←
           </Link>
         </div>
       </div>

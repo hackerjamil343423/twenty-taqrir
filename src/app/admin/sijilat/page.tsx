@@ -19,26 +19,26 @@ export default async function SijilListPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-midnight-ink">السجلات</h1>
-          <p className="text-sm text-gunmetal-gray mt-1">{sijilat.length} سجل</p>
+          <h1 className="text-2xl font-bold text-midnight-ink">روابط النماذج</h1>
+          <p className="text-sm text-gunmetal-gray mt-1">{sijilat.length} رابط</p>
         </div>
         <Link
           href="/admin/sijilat/new"
           className="px-6 py-2.5 bg-midnight-ink text-white text-sm font-medium rounded-[160px] hover:opacity-80 transition-opacity"
         >
-          + إنشاء سجل
+          + إنشاء رابط من قالب جاهز
         </Link>
       </div>
 
       {sijilat.length === 0 ? (
         <div className="bg-white rounded-[20px] p-16 text-center">
           <div className="text-4xl mb-4">📋</div>
-          <p className="text-gunmetal-gray mb-4">لا توجد سجلات بعد</p>
+          <p className="text-gunmetal-gray mb-4">لا توجد روابط بعد</p>
           <Link
             href="/admin/sijilat/new"
             className="text-sm text-highlight-orange hover:underline"
           >
-            أنشئ أول سجل ←
+            أنشئ أول رابط من قالب جاهز ←
           </Link>
         </div>
       ) : (
@@ -46,8 +46,8 @@ export default async function SijilListPage() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-faded-stone">
-                <th className="text-right text-xs font-medium text-gunmetal-gray px-6 py-4">السجل</th>
-                <th className="text-right text-xs font-medium text-gunmetal-gray px-6 py-4">النوع</th>
+                <th className="text-right text-xs font-medium text-gunmetal-gray px-6 py-4">عنوان الرابط</th>
+                <th className="text-right text-xs font-medium text-gunmetal-gray px-6 py-4">القالب الجاهز</th>
                 <th className="text-right text-xs font-medium text-gunmetal-gray px-6 py-4">الرابط</th>
                 <th className="text-right text-xs font-medium text-gunmetal-gray px-6 py-4">التنزيلات</th>
                 <th className="text-right text-xs font-medium text-gunmetal-gray px-6 py-4">التاريخ</th>

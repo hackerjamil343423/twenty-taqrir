@@ -24,7 +24,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 href="/admin/sijilat"
                 className="text-sm text-gunmetal-gray hover:text-midnight-ink transition-colors"
               >
-                السجلات
+                روابط النماذج
               </Link>
             </nav>
           </div>

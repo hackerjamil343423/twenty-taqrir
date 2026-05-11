@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface SignaturePadProps {
@@ -14,8 +14,9 @@ interface SignaturePadProps {
 export const SignaturePad = ({ label, error, required, onChange, value }: SignaturePadProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
-  const [isEmpty, setIsEmpty] = useState(!value);
+  const [hasLocalSignature, setHasLocalSignature] = useState(false);
   const lastPos = useRef<{ x: number; y: number } | null>(null);
+  const isEmpty = !value && !hasLocalSignature;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -23,7 +24,7 @@ export const SignaturePad = ({ label, error, required, onChange, value }: Signat
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Set canvas resolution to match display size
+    // Set canvas resolution to match display size.
     const rect = canvas.getBoundingClientRect();
     canvas.width = rect.width * window.devicePixelRatio;
     canvas.height = rect.height * window.devicePixelRatio;
@@ -38,7 +39,6 @@ export const SignaturePad = ({ label, error, required, onChange, value }: Signat
       const img = new Image();
       img.onload = () => ctx.drawImage(img, 0, 0, rect.width, rect.height);
       img.src = value;
-      setIsEmpty(false);
     }
   }, [value]);
 
@@ -73,7 +73,7 @@ export const SignaturePad = ({ label, error, required, onChange, value }: Signat
     ctx.lineTo(pos.x, pos.y);
     ctx.stroke();
     lastPos.current = pos;
-    setIsEmpty(false);
+    setHasLocalSignature(true);
   };
 
   const stopDrawing = () => {
@@ -91,7 +91,7 @@ export const SignaturePad = ({ label, error, required, onChange, value }: Signat
     if (!ctx) return;
     const rect = canvas.getBoundingClientRect();
     ctx.clearRect(0, 0, rect.width, rect.height);
-    setIsEmpty(true);
+    setHasLocalSignature(false);
     onChange(null);
   };
 
