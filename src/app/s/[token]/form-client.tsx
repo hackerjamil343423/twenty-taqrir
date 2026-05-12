@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import { TemplatePreview } from "@/components/templates/template-preview";
 import type { CatalogTemplate, TemplateField } from "@/lib/template-catalog";
 
 interface FormClientProps {
@@ -39,6 +40,15 @@ export function FormClient({ token, title, template }: FormClientProps) {
 
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
+      const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
+      const action = submitter?.value;
+
+      if (action === "preview") {
+        window.open(url, "_blank", "noopener,noreferrer");
+        toast.success("تم إنشاء المعاينة");
+        return;
+      }
+
       const a = document.createElement("a");
       a.href = url;
       a.download = `${title}.pdf`;
@@ -52,6 +62,119 @@ export function FormClient({ token, title, template }: FormClientProps) {
     } finally {
       setLoading(false);
     }
+  }
+
+  if (
+    template.pdfConfig.layout === "student-follow-up-record" ||
+    template.pdfConfig.layout === "national-day-thanks-certificate"
+  ) {
+    const inputClass =
+      "w-full h-11 rounded-[6px] border border-[#00b5cc] px-4 text-right text-[#666] outline-none transition-colors focus:border-[#0ab28b]";
+    const textareaClass =
+      "w-full min-h-56 rounded-[6px] border border-[#00b5cc] px-4 py-3 text-right text-[#666] outline-none transition-colors focus:border-[#0ab28b] resize-y";
+    const isCertificate = template.pdfConfig.layout === "national-day-thanks-certificate";
+    const fields = isCertificate
+      ? [
+          ["introLine", "تتقدم إدارة مدرسة .. بالشكر والتقدير لـ"],
+          ["message1", "يعجز البيان عن وصف قيمتك وأثرك على النشء شكرًا لك من القلب"],
+          ["message2", "وبدورنا نقدم له هذا الشكر كتقدير لجهوده المبذولة"],
+          ["message3", "سائلين الله لها مزيدًا من التفوق والنجاح"],
+          ["optionalLine", "سطر اختياري"],
+          ["teacherTitle", "معلم المادة"],
+          ["teacherName", "فلان الفلاني"],
+          ["principalTitle", "مدير المدرسة"],
+          ["principalName", "فلان الفلاني"],
+        ]
+      : [
+          ["region", "بمنطقة ..."],
+          ["educationOffice", "مكتب التعليم"],
+          ["schoolName", "اسم المدرسة"],
+          ["className", "الشعبة / الفصل"],
+          ["teacherName", "معلم المادة"],
+          ["principalName", "مدير المدرسة"],
+        ];
+
+    return (
+      <div className="min-h-screen bg-white" dir="rtl">
+        <main className="mx-auto flex max-w-[1360px] flex-col items-center px-5 py-8 font-[Cairo]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="https://eid-yat.info/twentyStore/ND93/img/logo.png"
+            alt="logo"
+            className="mb-3 w-[250px] max-w-full"
+          />
+
+          <h1 className="mb-2 text-center text-xl font-bold text-[#00b5cc]">
+            {isCertificate ? "شهادة شكر فارغة لكتابة النصوص" : "كشف متابعة الطلاب"}
+          </h1>
+          <h2 className="mb-8 text-center text-xl font-bold text-[#00b5cc]">
+            {isCertificate
+              ? "قم بكتابة العبارات في المرة الأولى وبعد ذلك يتم فقط تغيير اسم صاحب الشكر"
+              : "اكتب الاسماء ليتم تحميلها"}
+          </h2>
+
+          <div className="grid w-full grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(360px,520px)]">
+            <div className="lg:sticky lg:top-6">
+              <TemplatePreview layout={template.pdfConfig.layout} values={values} />
+            </div>
+
+            <form onSubmit={handleSubmit} className="w-full space-y-4">
+              {isCertificate &&
+                fields.slice(0, 1).map(([id, placeholder]) => (
+                  <input
+                    key={id}
+                    type="text"
+                    className={inputClass}
+                    value={(values[id] as string) ?? ""}
+                    onChange={(e) => setValue(id, e.target.value)}
+                    placeholder={placeholder}
+                  />
+                ))}
+
+              <textarea
+                className={textareaClass}
+                value={(values.studentNames as string) ?? ""}
+                onChange={(e) => setValue("studentNames", e.target.value)}
+                placeholder="اكتب (الصق) الاسماء هنا (كل اسم في سطر )"
+                required
+              />
+
+              {(isCertificate ? fields.slice(1) : fields).map(([id, placeholder]) => (
+                <input
+                  key={id}
+                  type="text"
+                  className={inputClass}
+                  value={(values[id] as string) ?? ""}
+                  onChange={(e) => setValue(id, e.target.value)}
+                  placeholder={placeholder}
+                />
+              ))}
+
+              <div className="flex flex-wrap justify-center gap-3 pt-2">
+                {isCertificate && (
+                  <button
+                    type="submit"
+                    value="preview"
+                    disabled={loading}
+                    className="h-11 w-[200px] rounded-[6px] bg-[#00b5cc] px-3 text-[17px] font-bold text-white transition-colors hover:bg-[#0ab28b] disabled:opacity-60"
+                  >
+                    معاينة الشهادة
+                  </button>
+                )}
+                <button
+                  type="submit"
+                  value="download"
+                  disabled={loading}
+                  className="h-11 w-[200px] rounded-[6px] bg-[#00b5cc] px-3 text-[17px] font-bold text-white transition-colors hover:bg-[#0ab28b] disabled:opacity-60"
+                >
+                  {loading ? "جاري التحميل..." : isCertificate ? "تحميل الشهادات" : "بي دي اف"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </main>
+      </div>
+    );
   }
 
   return (

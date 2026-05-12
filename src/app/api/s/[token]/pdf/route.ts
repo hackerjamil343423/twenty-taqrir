@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getCatalogTemplate } from "@/lib/template-catalog";
 import { renderToBuffer } from "@react-pdf/renderer";
-import { SijilPDF } from "@/components/pdf/sijil-pdf";
+import { NationalDayThanksPDF } from "@/components/pdf/national-day-thanks-pdf";
+import { StudentFollowUpPDF } from "@/components/pdf/student-follow-up-pdf";
 import React from "react";
 
 export const runtime = "nodejs";
@@ -26,14 +27,18 @@ export async function POST(
   const body = await req.json();
   const data = (body.data ?? {}) as Record<string, unknown>;
 
-  const element = React.createElement(SijilPDF, {
-    title: sijil.title,
-    templateName: template.name,
-    fields: template.fields,
-    data,
-  });
+  const element =
+    template.pdfConfig.layout === "student-follow-up-record"
+      ? React.createElement(StudentFollowUpPDF, { data })
+      : template.pdfConfig.layout === "national-day-thanks-certificate"
+        ? React.createElement(NationalDayThanksPDF, { data })
+        : null;
 
-  const buffer = await renderToBuffer(element);
+  if (!element) {
+    return NextResponse.json({ error: "القالب غير مدعوم" }, { status: 400 });
+  }
+
+  const buffer = await renderToBuffer(element as Parameters<typeof renderToBuffer>[0]);
 
   await db.sijil.update({
     where: { id: sijil.id },
