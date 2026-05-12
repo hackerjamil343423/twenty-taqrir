@@ -8,7 +8,10 @@ import { headers } from "next/headers";
 export default async function SijilListPage() {
   const headersList = await headers();
   const host = headersList.get("host") ?? "localhost:3000";
-  const protocol = host.startsWith("localhost") ? "http" : "https";
+  const protocol =
+    host.startsWith("localhost") || host.startsWith("127.0.0.1") || host.startsWith("[::1]")
+      ? "http"
+      : "https";
   const baseUrl = `${protocol}://${host}`;
 
   const sijilat = await db.sijil.findMany({
